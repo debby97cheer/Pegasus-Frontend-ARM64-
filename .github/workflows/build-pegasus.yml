@@ -16,13 +16,13 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             
-            echo '>>> 1. 安装 Qt5 与底层图形依赖...'
-            # 移除了在 24.04 中找不到的旧模块名，保留核心包
+            echo '>>> 1. 安装 Qt5、SDL2 与底层图形依赖...'
             apt-get install -y git build-essential cmake ninja-build \
               qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev libqt5svg5-dev \
               qml-module-qtmultimedia qml-module-qtquick-layouts \
               qml-module-qtquick-controls2 qml-module-qtquick2 \
-              libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev
+              libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
+              libsdl2-dev
 
             echo '>>> 2. 拉取 Pegasus 源码...'
             git clone --recursive https://github.com/mmatyas/pegasus-frontend.git
