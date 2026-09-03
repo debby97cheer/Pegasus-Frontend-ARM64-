@@ -12,8 +12,8 @@ jobs:
 
       - name: Native Build in ARM64 Docker Container
         run: |
-          # 启动一个真实的 ARM64 Ubuntu 24.04 容器，映射当前目录并在其中编译
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:24.04 /bin/bash -c "
+          # 加上了 --platform linux/arm64，并使用官方 ubuntu:24.04 镜像
+          docker run --rm --platform linux/arm64 -v ${{ github.workspace }}:/workspace -w /workspace ubuntu:24.04 /bin/bash -c "
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             
@@ -27,7 +27,7 @@ jobs:
             git clone --recursive https://github.com/mmatyas/pegasus-frontend.git
             cd pegasus-frontend
             
-            echo '>>> 3. 开始原生编译...'
+            echo '>>> 3. 开始原生编译 (这大约需要 10-15 分钟)...'
             cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release
             ninja -C build
             
