@@ -22,7 +22,7 @@ jobs:
               qml-module-qtmultimedia qml-module-qtquick-layouts \
               qml-module-qtquick-controls2 qml-module-qtquick2 \
               libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev \
-              libsdl2-dev
+              libsdl2-dev qttools5-dev qttools5-dev-tools
 
             echo '>>> 2. 拉取 Pegasus 源码...'
             git clone --recursive https://github.com/mmatyas/pegasus-frontend.git
