@@ -16,11 +16,12 @@ jobs:
             export DEBIAN_FRONTEND=noninteractive
             apt-get update -y
             
-            echo '>>> 1. 安装 Qt5 与底层图形依赖 (拥抱最稳妥的 Qt5 架构)...'
+            echo '>>> 1. 安装 Qt5 与底层图形依赖...'
+            # 移除了在 24.04 中找不到的旧模块名，保留核心包
             apt-get install -y git build-essential cmake ninja-build \
               qtbase5-dev qtdeclarative5-dev qtmultimedia5-dev libqt5svg5-dev \
-              qml-module-qtmultimedia qml-module-qtqml-workerscript \
-              qml-module-qtquick-layouts qml-module-qtquick-controls2 qml-module-qtquick2 \
+              qml-module-qtmultimedia qml-module-qtquick-layouts \
+              qml-module-qtquick-controls2 qml-module-qtquick2 \
               libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev
 
             echo '>>> 2. 拉取 Pegasus 源码...'
@@ -28,7 +29,6 @@ jobs:
             cd pegasus-frontend
             
             echo '>>> 3. 开始原生编译 (这大约需要 10-15 分钟)...'
-            # 删除了 Qt6 宏，让它自然使用 Qt5
             cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release
             ninja -C build
             
