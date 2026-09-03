@@ -1,0 +1,42 @@
+name: Build Pegasus Frontend ARM64
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-pegasus:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Set up QEMU for ARM64 Emulation
+        uses: docker/setup-qemu-action@v3
+
+      - name: Native Build in ARM64 Docker Container
+        run: |
+          # 启动一个真实的 ARM64 Ubuntu 24.04 容器，映射当前目录并在其中编译
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace arm64v8/ubuntu:24.04 /bin/bash -c "
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -y
+            
+            echo '>>> 1. 安装 Qt6 与底层图形依赖...'
+            apt-get install -y git build-essential cmake ninja-build \
+              qt6-base-dev qt6-declarative-dev qt6-multimedia-dev qt6-svg-dev \
+              qml6-module-qtqml-workerscript qml6-module-qtquick-layouts \
+              libdrm-dev libgbm-dev libegl1-mesa-dev libgl1-mesa-dev
+
+            echo '>>> 2. 拉取 Pegasus 源码...'
+            git clone --recursive https://github.com/mmatyas/pegasus-frontend.git
+            cd pegasus-frontend
+            
+            echo '>>> 3. 开始原生编译...'
+            cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release
+            ninja -C build
+            
+            echo '>>> 4. 提取产物...'
+            cp build/pegasus-frontend /workspace/
+          "
+
+      - name: Upload Pegasus Binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: pegasus-arm64
+          path: pegasus-frontend
