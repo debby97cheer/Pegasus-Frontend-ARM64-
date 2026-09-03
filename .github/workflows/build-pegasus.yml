@@ -28,16 +28,17 @@ jobs:
             git clone --recursive https://github.com/mmatyas/pegasus-frontend.git
             cd pegasus-frontend
             
-            echo '>>> 3. 开始原生编译 (这大约需要 10-15 分钟)...'
+            echo '>>> 3. 开始原生编译...'
             cmake -B build -GNinja -DCMAKE_BUILD_TYPE=Release
             ninja -C build
             
-            echo '>>> 4. 提取产物...'
-            cp build/pegasus-frontend /workspace/
+            echo '>>> 4. 提取产物 (修正文件名为 pegasus-fe)...'
+            find build -name 'pegasus-fe' -type f -executable -exec cp {} /workspace/ \;
           "
 
       - name: Upload Pegasus Binary
         uses: actions/upload-artifact@v4
         with:
           name: pegasus-arm64
-          path: pegasus-frontend
+          # 这里也要改成 pegasus-fe
+          path: pegasus-fe
